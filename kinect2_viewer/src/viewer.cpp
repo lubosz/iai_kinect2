@@ -373,14 +373,6 @@ private:
     	visualizer->addPointCloud(cloud, "cloud2", v2);
     	visualizer->setPointCloudRenderingProperties(pcl::visualization::PCL_VISUALIZER_POINT_SIZE, 1, "cloud2");
     	visualizer->setCameraPosition(0, 0, 0, 0, -1, 0, v2);
-
-/*
-visualizer->setCameraFieldOfView(5,v1); 
-visualizer->setCameraFieldOfView(5,v2); 
-*/
-
-
-
     } else {
     	visualizer->addPointCloud(cloud, "cloud1");
     	visualizer->setPointCloudRenderingProperties(pcl::visualization::PCL_VISUALIZER_POINT_SIZE, 1, "cloud1");
