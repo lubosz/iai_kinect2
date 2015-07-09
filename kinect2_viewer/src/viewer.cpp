@@ -358,7 +358,7 @@ private:
     int v1(0);
    	int v2(0);
 
-    pos = Eigen::Vector3d(0,0.0,0.0);
+    pos = Eigen::Vector3d(0,-0.3,0.0);
 
     if (oculus_mode) {
 
@@ -425,7 +425,9 @@ private:
         );
 
         if (oculus_mode) {
+          eigenquat = Eigen::AngleAxisd(-M_PI*0.25, Eigen::Vector3d::UnitY()) * eigenquat;
           eigenquat = eigenquat * Eigen::AngleAxisd(-M_PI*0.5, Eigen::Vector3d::UnitZ());
+
         } else {
           eigenquat = eigenquat * Eigen::AngleAxisd(-M_PI*1.0, Eigen::Vector3d::UnitZ());
         }
