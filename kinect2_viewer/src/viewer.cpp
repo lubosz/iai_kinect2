@@ -411,7 +411,7 @@ private:
       if (hmd) {
         ovrTrackingState state = ovrHmd_GetTrackingState(hmd, 0);
         ovrQuatf orientation = state.HeadPose.ThePose.Orientation;
-	      //ovrVector3f position = state.HeadPose.ThePose.Position;
+	      ovrVector3f position = state.HeadPose.ThePose.Position;
 
         Eigen::AngleAxisd yawAngle(-M_PI, Eigen::Vector3d::UnitY());
         Eigen::AngleAxisd pitchAngle(-M_PI, Eigen::Vector3d::UnitZ());
@@ -436,7 +436,12 @@ private:
         Eigen::Vector3d view = eigenquat._transformVector(Eigen::Vector3d(0,0,1));
         Eigen::Vector3d up = eigenquat._transformVector(Eigen::Vector3d(0,1,0));
 
+        Eigen::Vector3d hmdposition = 0.5 * Eigen::Vector3d(-position.x, 2*position.y,  position.z);
+
         pos = Eigen::Vector3d(0,-0.3,0.0);
+
+        pos -= hmdposition;
+        view -= hmdposition;
 
         eyeDistance = 0.05;
 
