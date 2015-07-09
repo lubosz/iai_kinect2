@@ -424,8 +424,9 @@ private:
          -orientation.z 
         );
 
+        eigenquat = Eigen::AngleAxisd(-M_PI*0.25, Eigen::Vector3d::UnitY()) * eigenquat;
+
         if (oculus_mode) {
-          eigenquat = Eigen::AngleAxisd(-M_PI*0.25, Eigen::Vector3d::UnitY()) * eigenquat;
           eigenquat = eigenquat * Eigen::AngleAxisd(-M_PI*0.5, Eigen::Vector3d::UnitZ());
 
         } else {
