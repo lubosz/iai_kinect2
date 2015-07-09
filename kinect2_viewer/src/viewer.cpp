@@ -415,13 +415,6 @@ visualizer->setCameraFieldOfView(5,v2);
         }
 
       }
-      if(save)
-      {
-        save = false;
-        cv::Mat depthDisp;
-        dispDepth(depth, depthDisp, 12000.0f);
-        saveCloudAndImages(cloud, color, depth, depthDisp);
-      }
       
       if (hmd) {
         ovrTrackingState state = ovrHmd_GetTrackingState(hmd, 0);
