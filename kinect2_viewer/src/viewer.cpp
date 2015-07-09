@@ -378,7 +378,7 @@ private:
     	visualizer->setPointCloudRenderingProperties(pcl::visualization::PCL_VISUALIZER_POINT_SIZE, 1, "cloud1");
 		  visualizer->setCameraPosition(0, 0, 0, 0, -1, 0);
     }
-    visualizer->setCameraFieldOfView(1.5); 
+    visualizer->setCameraFieldOfView(1.4); 
 
     visualizer->setBackgroundColor(0, 0, 0);
     visualizer->setPosition(mode == BOTH ? color.cols : 0, 0);
