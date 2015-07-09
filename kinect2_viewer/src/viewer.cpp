@@ -191,6 +191,13 @@ private:
 
 
 
+    unsigned sensorCaps = ovrTrackingCap_Orientation| ovrTrackingCap_MagYawCorrection | ovrTrackingCap_Position;
+
+    std::cout << "about to config tracking\n";
+
+    ovrHmd_ConfigureTracking(hmd, sensorCaps, 0);
+
+
 
     switch(mode)
     {
