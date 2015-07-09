@@ -358,7 +358,7 @@ private:
     int v1(0);
    	int v2(0);
 
-    pos = Eigen::Vector3d(0,-0.3,0.0);
+    
 
     if (oculus_mode) {
 
@@ -436,6 +436,7 @@ private:
         Eigen::Vector3d view = eigenquat._transformVector(Eigen::Vector3d(0,0,1));
         Eigen::Vector3d up = eigenquat._transformVector(Eigen::Vector3d(0,1,0));
 
+        pos = Eigen::Vector3d(0,-0.3,0.0);
 
         eyeDistance = 0.05;
 
