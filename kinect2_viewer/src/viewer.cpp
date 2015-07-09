@@ -353,7 +353,7 @@ private:
 
     visualizer->initCameraParameters();
 
-    bool oculus_mode = false;
+    bool oculus_mode = true;
 
     int v1(0);
    	int v2(0);
