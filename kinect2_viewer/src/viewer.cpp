@@ -461,8 +461,11 @@ visualizer->setCameraFieldOfView(5,v2);
           up.x(), up.y(), up.z());
         }
       }
+      
+      visualizer->spinOnce(0);
+
     }
-    visualizer->spinOnce(10);
+    
     visualizer->close();
   }
 
