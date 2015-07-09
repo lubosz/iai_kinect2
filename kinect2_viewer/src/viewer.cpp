@@ -442,20 +442,21 @@ visualizer->setCameraFieldOfView(5,v2);
         Eigen::Vector3d view = eigenquat._transformVector(Eigen::Vector3d(0,0,1));
         Eigen::Vector3d up = eigenquat._transformVector(Eigen::Vector3d(0,1,0));
 
-        Eigen::Vector3d pos = Eigen::Vector3d(0,0.0,0.0);
+
+        eyeDistance = 0.05;
 
         if (oculus_mode) {
          visualizer->setCameraPosition (
-          pos.x()-0.05, pos.y(), pos.z(), 
+          pos.x()-eyeDistance/2.0, pos.y(), pos.z(), 
           view.x(), view.y(), view.z(), 
           up.x(), up.y(), up.z(), v1);
          visualizer->setCameraPosition (
-          pos.x()+0.05, pos.y(), pos.z(), 
+          pos.x()+eyeDistance/2.0, pos.y(), pos.z(), 
           view.x(), view.y(), view.z(), 
           up.x(), up.y(), up.z(), v2);
         } else {
          visualizer->setCameraPosition (
-          pos.x()-0.05, pos.y(), pos.z(), 
+          pos.x(), pos.y(), pos.z(), 
           view.x(), view.y(), view.z(), 
           up.x(), up.y(), up.z());
         }
