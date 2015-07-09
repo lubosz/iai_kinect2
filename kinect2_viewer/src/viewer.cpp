@@ -471,7 +471,6 @@ visualizer->setCameraFieldOfView(5,v2);
 
   void keyboardEvent(const pcl::visualization::KeyboardEvent &event, void *)
   {
-  	std::cout << "keyboardEvent\n";
     if(event.keyUp())
     {
       switch(event.getKeyCode())
@@ -480,18 +479,38 @@ visualizer->setCameraFieldOfView(5,v2);
       case 'q':
         running = false;
         break;
-      case '+':
-      	std::cout << "increasing eye distance to\n";
-      	break;
-      case '-':
-      	std::cout << "decreasing eye distance to\n";
-      	break;
-      case ' ':
-      case 's':
-        save = true;
-        break;
       }
     }
+
+    else if(event.keyDown())
+    {
+      switch(event.getKeyCode())
+      {
+      case '+':
+        //eyeDistance += 0.01;
+      this->fov += 0.01;
+        std::cout << "increasing fov to" << this->fov << "\n";
+        break;
+      case '-':
+      this->fov -= 0.01;
+        std::cout << "decreasing fov to" << this->fov << "\n";
+        break;
+
+      case 'w':
+        pos += Eigen::Vector3d(0.0,0.0,0.1);
+        break;
+      case 'a':
+        pos += Eigen::Vector3d(-0.1,0.0,0.0);
+        break;
+      case 's':
+        pos += Eigen::Vector3d(0.0,0.0,-0.1);
+        break;  
+      case 'd':
+        pos += Eigen::Vector3d(0.1,0.0,0.0);
+        break; 
+      }
+    }
+
   }
 
   void readImage(const sensor_msgs::Image::ConstPtr msgImage, cv::Mat &image) const
