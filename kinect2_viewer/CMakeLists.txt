@@ -67,6 +67,7 @@ include_directories(include
   ${OpenCV_INCLUDE_DIRS}
   ${PCL_INCLUDE_DIRS}
   ${kinect2_bridge_INCLUDE_DIRS}
+  /usr/include/ovr-0.5.0.1/
 )
 
 add_executable(kinect2_viewer src/viewer.cpp)
@@ -75,6 +76,8 @@ target_link_libraries(kinect2_viewer
   ${OpenCV_LIBRARIES}
   ${PCL_LIBRARIES}
   ${kinect2_bridge_LIBRARIES}
+  ovr
+  OculusVR
 )
 
 #############

@@ -50,6 +50,9 @@
 
 #include <kinect2_bridge/kinect2_definitions.h>
 
+#include "OVR.h"
+using namespace OVR;
+
 class Receiver
 {
 public:
@@ -454,7 +457,7 @@ private:
       {
         register const float depthValue = *itD / 1000.0f;
         // Check for invalid measurements
-        if(*itD == 0)
+        if(*itD == 0 && std::isnan(depthValue) || depthValue <= 0.001)
         {
           // not valid
           itP->x = itP->y = itP->z = badPoint;
