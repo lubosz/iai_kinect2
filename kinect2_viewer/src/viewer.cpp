@@ -99,6 +99,8 @@ private:
   std::ostringstream oss;
   std::vector<int> params;
 
+  ovrHmd hmd = NULL;
+
 public:
   Receiver(const std::string &topicColor, const std::string &topicDepth, const bool useExact, const bool useCompressed)
     : topicColor(topicColor), topicDepth(topicDepth), useExact(useExact), useCompressed(useCompressed),
@@ -169,6 +171,21 @@ private:
     cloud->is_dense = false;
     cloud->points.resize(cloud->height * cloud->width);
     createLookup(this->color.cols, this->color.rows);
+
+
+  	ovrInitParams params = {0, 0, nullptr, 0};
+  	ovrBool result = ovr_Initialize(&params);
+
+    if (!result)
+        std::cout << "Unable to initialize LibOVR" << std::endl;
+
+	hmd = ovrHmd_Create(0);
+
+    if (!hmd)
+        std::cout << "Unable to create HMD: %s" << ovrHmd_GetLastError(NULL) << std::endl;
+
+
+
 
     switch(mode)
     {
