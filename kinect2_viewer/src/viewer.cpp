@@ -357,6 +357,7 @@ private:
 
   void keyboardEvent(const pcl::visualization::KeyboardEvent &event, void *)
   {
+  	std::cout << "keyboardEvent\n";
     if(event.keyUp())
     {
       switch(event.getKeyCode())
@@ -365,6 +366,12 @@ private:
       case 'q':
         running = false;
         break;
+      case '+':
+      	std::cout << "increasing eye distance to\n";
+      	break;
+      case '-':
+      	std::cout << "decreasing eye distance to\n";
+      	break;
       case ' ':
       case 's':
         save = true;
