@@ -69,11 +69,16 @@ private:
   const std::string topicColor, topicDepth;
   const bool useExact, useCompressed;
 
+  float eyeDistance = 0.25;
+  float fov = 0.5;
+
   bool updateImage, updateCloud;
   bool save;
   bool running;
   size_t frame;
   const size_t queueSize;
+
+  Eigen::Vector3d pos;
 
   cv::Mat color, depth;
   cv::Mat cameraMatrixColor, cameraMatrixDepth;
