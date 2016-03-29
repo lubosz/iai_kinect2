@@ -50,6 +50,9 @@
 
 #include <kinect2_bridge/kinect2_definitions.h>
 
+#include "OVR.h"
+using namespace OVR;
+
 class Receiver
 {
 public:
@@ -66,11 +69,16 @@ private:
   const std::string topicColor, topicDepth;
   const bool useExact, useCompressed;
 
+  float eyeDistance = 0.25;
+  float fov = 0.5;
+
   bool updateImage, updateCloud;
   bool save;
   bool running;
   size_t frame;
   const size_t queueSize;
+
+  Eigen::Vector3d pos;
 
   cv::Mat color, depth;
   cv::Mat cameraMatrixColor, cameraMatrixDepth;
@@ -95,6 +103,8 @@ private:
   pcl::PCDWriter writer;
   std::ostringstream oss;
   std::vector<int> params;
+
+  ovrHmd hmd = NULL;
 
 public:
   Receiver(const std::string &topicColor, const std::string &topicDepth, const bool useExact, const bool useCompressed)
@@ -166,6 +176,25 @@ private:
     cloud->is_dense = false;
     cloud->points.resize(cloud->height * cloud->width);
     createLookup(this->color.cols, this->color.rows);
+
+    // Initialize LibOVR
+    ovrInitParams params = {0, 0, nullptr, 0};
+    ovrBool result = ovr_Initialize(&params);
+
+    if (!result)
+        std::cout << "Unable to initialize LibOVR" << std::endl;
+
+    hmd = ovrHmd_Create(0);
+
+    if (!hmd)
+        std::cout << "Unable to create HMD: %s" <<
+                     ovrHmd_GetLastError(NULL) << std::endl;
+
+    unsigned sensorCaps = ovrTrackingCap_Orientation |
+            ovrTrackingCap_MagYawCorrection |
+            ovrTrackingCap_Position;
+
+    ovrHmd_ConfigureTracking(hmd, sensorCaps, 0);
 
     switch(mode)
     {
