@@ -471,12 +471,38 @@ private:
       case 'q':
         running = false;
         break;
-      case ' ':
+      }
+    }
+
+    else if(event.keyDown())
+    {
+      switch(event.getKeyCode())
+      {
+      case '+':
+        //eyeDistance += 0.01;
+      this->fov += 0.01;
+        std::cout << "increasing fov to" << this->fov << "\n";
+        break;
+      case '-':
+      this->fov -= 0.01;
+        std::cout << "decreasing fov to" << this->fov << "\n";
+        break;
+
+      case 'w':
+        pos += Eigen::Vector3d(0.0,0.0,0.1);
+        break;
+      case 'a':
+        pos += Eigen::Vector3d(-0.1,0.0,0.0);
+        break;
       case 's':
-        save = true;
+        pos += Eigen::Vector3d(0.0,0.0,-0.1);
+        break;
+      case 'd':
+        pos += Eigen::Vector3d(0.1,0.0,0.0);
         break;
       }
     }
+
   }
 
   void readImage(const sensor_msgs::Image::ConstPtr msgImage, cv::Mat &image) const
