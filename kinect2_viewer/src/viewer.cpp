@@ -348,14 +348,37 @@ private:
 
     createCloud(depth, color, cloud);
 
-    visualizer->addPointCloud(cloud, cloudName);
-    visualizer->setPointCloudRenderingProperties(pcl::visualization::PCL_VISUALIZER_POINT_SIZE, 1, cloudName);
     visualizer->initCameraParameters();
+
+    bool oculus_mode = true;
+
+    int v1(0);
+    int v2(0);
+
+    if (oculus_mode) {
+        visualizer->createViewPort(0.0, 0.0, 1.0, 0.5, v1);
+        visualizer->createViewPortCamera(v1);
+        visualizer->addPointCloud(cloud, "cloud1", v1);
+        visualizer->setPointCloudRenderingProperties(pcl::visualization::PCL_VISUALIZER_POINT_SIZE, 1, "cloud1");
+        visualizer->setCameraPosition(0, 0, 0, 0, -1, 0, v1);
+
+        visualizer->createViewPort(0.0, 0.5, 1.0, 1.0, v2);
+        visualizer->createViewPortCamera(v2);
+        visualizer->addPointCloud(cloud, "cloud2", v2);
+        visualizer->setPointCloudRenderingProperties(pcl::visualization::PCL_VISUALIZER_POINT_SIZE, 1, "cloud2");
+        visualizer->setCameraPosition(0, 0, 0, 0, -1, 0, v2);
+    } else {
+        visualizer->addPointCloud(cloud, "cloud1");
+        visualizer->setPointCloudRenderingProperties(pcl::visualization::PCL_VISUALIZER_POINT_SIZE, 1, "cloud1");
+        visualizer->setCameraPosition(0, 0, 0, 0, -1, 0);
+    }
+    visualizer->setCameraFieldOfView(1.4);
+
     visualizer->setBackgroundColor(0, 0, 0);
     visualizer->setPosition(mode == BOTH ? color.cols : 0, 0);
     visualizer->setSize(color.cols, color.rows);
     visualizer->setShowFPS(true);
-    visualizer->setCameraPosition(0, 0, 0, 0, -1, 0);
+
     visualizer->registerKeyboardCallback(&Receiver::keyboardEvent, *this);
 
     for(; running && ros::ok();)
@@ -370,16 +393,70 @@ private:
 
         createCloud(depth, color, cloud);
 
-        visualizer->updatePointCloud(cloud, cloudName);
+        if (oculus_mode) {
+            visualizer->updatePointCloud(cloud, "cloud1");
+            visualizer->updatePointCloud(cloud, "cloud2");
+        } else {
+            visualizer->updatePointCloud(cloud, "cloud1");
+        }
+
       }
-      if(save)
-      {
-        save = false;
-        cv::Mat depthDisp;
-        dispDepth(depth, depthDisp, 12000.0f);
-        saveCloudAndImages(cloud, color, depth, depthDisp);
+
+      if (hmd) {
+          ovrTrackingState state = ovrHmd_GetTrackingState(hmd, 0);
+          ovrQuatf orientation = state.HeadPose.ThePose.Orientation;
+          ovrVector3f position = state.HeadPose.ThePose.Position;
+
+          Eigen::AngleAxisd yawAngle(-M_PI, Eigen::Vector3d::UnitY());
+          Eigen::AngleAxisd pitchAngle(-M_PI, Eigen::Vector3d::UnitZ());
+          Eigen::AngleAxisd rollAngle(-0.5 * M_PI, Eigen::Vector3d::UnitX());
+
+          Eigen::Quaternion<double> eigenquat =  Eigen::Quaternion<double> (
+                      orientation.w,
+                      orientation.x,
+                      -orientation.y,
+                      -orientation.z
+                      );
+
+          eigenquat = Eigen::AngleAxisd(-M_PI*0.25, Eigen::Vector3d::UnitY()) * eigenquat;
+
+          if (oculus_mode) {
+              eigenquat = eigenquat * Eigen::AngleAxisd(-M_PI*0.5, Eigen::Vector3d::UnitZ());
+
+          } else {
+              eigenquat = eigenquat * Eigen::AngleAxisd(-M_PI*1.0, Eigen::Vector3d::UnitZ());
+          }
+
+
+          Eigen::Vector3d view = eigenquat._transformVector(Eigen::Vector3d(0,0,1));
+          Eigen::Vector3d up = eigenquat._transformVector(Eigen::Vector3d(0,1,0));
+
+          Eigen::Vector3d hmdposition = 0.5 * Eigen::Vector3d(-position.x, 2*position.y,  position.z);
+
+          pos = Eigen::Vector3d(0,-0.3,0.0);
+
+          pos -= hmdposition;
+          view -= hmdposition;
+
+          eyeDistance = 0.05;
+
+          if (oculus_mode) {
+              visualizer->setCameraPosition (
+                          pos.x()-eyeDistance/2.0, pos.y(), pos.z(),
+                          view.x(), view.y(), view.z(),
+                          up.x(), up.y(), up.z(), v1);
+              visualizer->setCameraPosition (
+                          pos.x()+eyeDistance/2.0, pos.y(), pos.z(),
+                          view.x(), view.y(), view.z(),
+                          up.x(), up.y(), up.z(), v2);
+          } else {
+              visualizer->setCameraPosition (
+                          pos.x(), pos.y(), pos.z(),
+                          view.x(), view.y(), view.z(),
+                          up.x(), up.y(), up.z());
+          }
       }
-      visualizer->spinOnce(10);
+      visualizer->spinOnce(0);
     }
     visualizer->close();
   }
