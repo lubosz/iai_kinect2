@@ -579,7 +579,7 @@ private:
       {
         register const float depthValue = *itD / 1000.0f;
         // Check for invalid measurements
-        if(*itD == 0)
+        if(*itD == 0 && (std::isnan(depthValue) || depthValue <= 0.001))
         {
           // not valid
           itP->x = itP->y = itP->z = badPoint;
